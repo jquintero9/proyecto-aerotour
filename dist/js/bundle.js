@@ -122,12 +122,12 @@ var Slider = function () {
     this.interval = null;
     this.timer = 4000;
     this.currentSlide = 0;
+    this.nextSlide = 1;
     this.slides = document.querySelectorAll('.slide');
     this.numSlides = this.slides.length;
     this.contentBanner = document.querySelectorAll('.content-banner');
     this.sliderController = document.querySelector('.slider-controller');
     this.controllers = document.querySelectorAll('.controller');
-    console.log(this.slides, this.currentSlide, this.numSlides, this.controllers);
     this.init();
     this.initControllers();
   }
@@ -138,24 +138,8 @@ var Slider = function () {
       var _this = this;
 
       this.controllers.forEach(function (controller, index) {
-        controller.addEventListener('click', function (ev) {
-
-          if (index != _this.currentSlide) {
-            clearInterval(_this.interval);
-            var current = _this.getCurrentSlide();
-
-            var nextIndex = _this.isOutIndex(index) ? 0 : index + 1,
-                next = _this.slides.item(nextIndex);
-
-            // this.currentSlide = nextIndex;
-
-            Slider.animatedSlide(current, next);
-
-            console.log('current slide Controller: ' + _this.currentSlide);
-            _this.init();
-          } else {
-            console.log('index: ' + index + '  -  current slide: ' + _this.currentSlide);
-          }
+        controller.addEventListener('click', function () {
+          if (index != _this.currentSlide) _this.changeSlide(index);
         });
       });
     }
@@ -165,38 +149,40 @@ var Slider = function () {
       var _this2 = this;
 
       this.interval = setInterval(function () {
-        return _this2.changeSlide();
+        return _this2.runningSlider();
       }, this.timer);
     }
   }, {
-    key: 'isOutIndex',
-    value: function isOutIndex(index) {
-      return index + 1 >= this.numSlides;
+    key: 'runningSlider',
+    value: function runningSlider() {
+      if (this.nextSlide > this.numSlides - 1) this.nextSlide = 0;
+
+      this.animatedSlide(this.currentSlide, this.nextSlide);
+
+      this.currentSlide = this.nextSlide;
+      this.nextSlide += 1;
     }
   }, {
-    key: 'getCurrentSlide',
-    value: function getCurrentSlide() {
-      return this.slides.item(this.currentSlide);
-    }
-  }, {
-    key: 'getNextSlide',
-    value: function getNextSlide() {
-      var nextIndex = this.isOutIndex(this.currentSlide) ? 0 : this.currentSlide + 1;
-
-      //Change Controller
-      _utils2.default.toggleClass(this.controllers.item(this.currentSlide), 'active');
-      _utils2.default.toggleClass(this.controllers.item(nextIndex), 'active');
-
-      this.currentSlide = nextIndex;
-      return this.slides.item(nextIndex);
+    key: 'animatedSlide',
+    value: function animatedSlide(current, next) {
+      _utils2.default.toggleClass(this.controllers.item(current), 'active');
+      _utils2.default.toggleClass(this.controllers.item(next), 'active');
+      _utils2.default.fadeOut(this.slides.item(current));
+      _utils2.default.fadeIn(this.slides.item(next));
     }
   }, {
     key: 'changeSlide',
-    value: function changeSlide() {
-      var current = this.getCurrentSlide(),
-          next = this.getNextSlide();
+    value: function changeSlide(index) {
+      clearInterval(this.interval);
 
-      Slider.animatedSlide(current, next);
+      if (index > this.numSlides - 1) index = 0;
+
+      this.animatedSlide(this.currentSlide, index);
+
+      this.currentSlide = index;
+      this.nextSlide = index + 1;
+
+      this.init();
     }
   }, {
     key: 'onScroll',
@@ -214,16 +200,6 @@ var Slider = function () {
       } else {
         this.sliderController.classList.remove('hidden');
       }
-    }
-  }], [{
-    key: 'animatedSlide',
-    value: function animatedSlide(current, next) {
-      console.log('current: ');
-      _utils2.default.fadeOut(current);
-      console.log(current);
-      console.log('next: ');
-      _utils2.default.fadeIn(next);
-      console.log(next);
     }
   }]);
 

@@ -8,82 +8,58 @@ class Slider {
     this.interval = null;
     this.timer = 4000;
     this.currentSlide = 0;
+    this.nextSlide = 1;
     this.slides = document.querySelectorAll('.slide');
     this.numSlides = this.slides.length;
     this.contentBanner = document.querySelectorAll('.content-banner');
     this.sliderController = document.querySelector('.slider-controller');
     this.controllers = document.querySelectorAll('.controller');
-    console.log(this.slides, this.currentSlide, this.numSlides, this.controllers);
     this.init();
     this.initControllers();
   }
 
   initControllers() {
     this.controllers.forEach((controller, index) => {
-      controller.addEventListener('click', ev => {
-
-        if (index != this.currentSlide) {
-          clearInterval(this.interval);
-          const current = this.getCurrentSlide();
-
-
-
-          const nextIndex = this.isOutIndex(index) ? 0 : index + 1,
-              next = this.slides.item(nextIndex);
-
-          // this.currentSlide = nextIndex;
-
-          Slider.animatedSlide(current, next);
-
-          console.log(`current slide Controller: ${this.currentSlide}`);
-          this.init();
-        }
-        else {
-          console.log(`index: ${index}  -  current slide: ${this.currentSlide}`);
-        }
+      controller.addEventListener('click', () => {
+        if (index != this.currentSlide)
+          this.changeSlide(index)
       });
     });
   }
 
   init() {
-    this.interval = setInterval(() => this.changeSlide(), this.timer);
+    this.interval = setInterval(() => this.runningSlider(), this.timer);
   }
 
-  isOutIndex(index) {
-    return (index + 1 >= this.numSlides);
+  runningSlider() {
+    if (this.nextSlide > this.numSlides - 1)
+      this.nextSlide = 0;
+
+    this.animatedSlide(this.currentSlide, this.nextSlide);
+
+    this.currentSlide = this.nextSlide;
+    this.nextSlide += 1;
   }
 
-  getCurrentSlide() {
-    return this.slides.item(this.currentSlide);
+  animatedSlide(current, next) {
+    Util.toggleClass(this.controllers.item(current), 'active');
+    Util.toggleClass(this.controllers.item(next), 'active');
+    Util.fadeOut(this.slides.item(current));
+    Util.fadeIn(this.slides.item(next));
   }
 
-  getNextSlide() {
-    const nextIndex  = this.isOutIndex(this.currentSlide) ? 0: this.currentSlide + 1;
+  changeSlide(index) {
+    clearInterval(this.interval);
 
-    //Change Controller
-    Util.toggleClass(this.controllers.item(this.currentSlide), 'active');
-    Util.toggleClass(this.controllers.item(nextIndex), 'active');
+    if (index > this.numSlides - 1)
+      index = 0;
 
-    this.currentSlide = nextIndex;
-    return this.slides.item(nextIndex);
-  }
+    this.animatedSlide(this.currentSlide, index);
 
-  changeSlide() {
-    let current = this.getCurrentSlide(),
-        next = this.getNextSlide();
+    this.currentSlide = index;
+    this.nextSlide = index + 1;
 
-
-
-    Slider.animatedSlide(current, next);
-  }
-
-  static animatedSlide(current, next) {
-    console.log('current: ');
-    Util.fadeOut(current);
-    console.log(current);
-    console.log('next: ');
-    Util.fadeIn(next);
-    console.log(next)
+    this.init();
   }
 
   onScroll() {
