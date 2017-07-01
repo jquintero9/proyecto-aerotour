@@ -1,0 +1,70 @@
+//- Opciones del menú principal
+- var menuOptions = ['INICIO', 'PLANES TURÍSTICOS', 'TRANSPORTE', 'CONTACTO']
+- var barsClasses = ['bar-one', 'bar-two', 'bar-three']
+- var  bannerTitles = ['JURAMENTO DE BANDERA COVEÑAS', 'EXCURSIÓN DE BACHILLERES', 'SAN ANDRÉS TODO INCLUIDO']
+- var bannerDescriptions = ["Acompañe a su hijo en este día tanimportante.Este plan se puede pagar por cuotas o con la venta de boletas", "Disfruta de unas vacaciones junto a tus compañeros de colegio, en las hermosas playas de Cartagena.","Programa tus vacaciones en las Islas de San Andrés, donde encontraras hermosas playas, los mejores hoteles y la mejor comida típica de la región."]
+- var bannerClasses = ['juramento', 'excursion-bachilleres', 'san-andres']
+
+doctype html
+html(class="no-js", lang="es")
+  head
+    meta(charset="utf-8")
+    meta(http-equiv="x-ua-compatible", content="ie=edge")
+    meta(name="description", content="Agencia de viajes Aerotour Pereira, Risaralda")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    link(rel="apple-touch-icon", href="apple-touch-icon.png")
+    // Place favicon.ico in the directory
+    title Aerotour
+    //link(rel="stylesheet", href="https://file.myfontastic.com/bPq5aFX4BfyWqFxMw3dca5/icons.css")
+    link(rel="stylesheet", href="https://fonts.googleapis.com/css?family=Spectral:400,800")
+    link(rel="stylesheet", href="css/framework.css")
+    link(rel="stylesheet", href="css/styles.css")
+    script(src="js/vendor/modernizr-2.8.3.min.js")
+  body
+    <!--[if lt IE 9]>
+    p.browserupgrade Estás utilizando un navegador <b>desactualizado</b>. Por favor <a href="http://browsehappy.com/" target="_blank">actualiza</a> tu navegador para una mejor experiencia.
+    <![endif]-->
+    header.full-container.header
+      h1.font2.logo AEROTOUR
+      nav.ph12.hidden.nav-menu
+        ul.ph12.flex-container.justify-center.no-list-style
+          each option, index in menuOptions
+            li.flex-none
+              if index == 0
+                a(href="#").active=option
+              else
+                a(href="#")=option
+      .inline-block.menu-button
+        each className in barsClasses
+          div(class="bar " + className)
+    ul.ph12.no-list-style.slider
+      -for(var n = 0; n < 3; n++)
+        if n == 0
+          li.slide.fadeIn
+            section(class="full-container banner " + bannerClasses[n])
+              .ph12.center.content-banner
+                h2.font1_75.underline.banner-title=bannerTitles[n]
+                p.ph12.s11.m8.font1_25.center.underline.banner-description=bannerDescriptions[n]
+                a(href="#").font_75.banner-button VER PLAN
+        else
+          li.slide.fadeOut
+            section(class="full-container banner " + bannerClasses[n])
+              .ph12.center.content-banner
+                h2.font1_75.underline.banner-title=bannerTitles[n]
+                p.ph12.s11.m8.font1_25.center.underline.banner-description=bannerDescriptions[n]
+                a(href="#").font_75.banner-button VER PLAN
+    .font0.slider-controller
+      .inline-block.round.controller.active
+      .inline-block.round.controller
+      .inline-block.round.controller
+    section.content
+      div.box.fadeIn FadeIn - FadeOut
+      - for (var i = 0; i < 5; i++)
+        section
+          - for (var j = 0; j < 5; j++)
+            p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corporis aspernatur magni optio quasi at eum officiis praesentium accusamus qui animi sapiente iste maiores dicta magnam quibusdam, doloribus assumenda totam! Quis?
+    
+
+    script(src="js/bundle.js")
+
+
