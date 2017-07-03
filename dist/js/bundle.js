@@ -13,17 +13,21 @@ var _utils = require('./utils');
 
 var _utils2 = _interopRequireDefault(_utils);
 
+var _menu = require('./menu');
+
+var _menu2 = _interopRequireDefault(_menu);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var header = new _header2.default(),
-    slider = new _slider2.default();
+    slider = new _slider2.default(),
+    menu = new _menu2.default(header.header);
 
 console.log(document.body.scrollTop);
 
 var box = document.querySelector('.box'),
-    content = document.querySelector('.content');
-
-function fadeInFadeOut() {}
+    content = document.querySelector('.content'),
+    nav = document.querySelector('.nav-menu');
 
 window.addEventListener('scroll', function () {
   header.checkScroll();
@@ -35,7 +39,7 @@ content.addEventListener('click', function () {
   _utils2.default.toggleClass(box, 'fadeOut');
 });
 
-},{"./header":2,"./slider":3,"./utils":4}],2:[function(require,module,exports){
+},{"./header":2,"./menu":3,"./slider":4,"./utils":5}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -60,35 +64,28 @@ var Header = function () {
     this.logoContainer = document.querySelector('.logo-container');
     this.navMenu = document.querySelector('.nav-menu');
     this.menuList = document.querySelector('.menu-list');
-    this.menuButton = document.querySelector('.menu-button');
-    this.menuButton.addEventListener('click', this.buttonActivated);
 
     this.content = document.querySelector('.content');
     console.log(this.contentBanner);
   }
 
   _createClass(Header, [{
-    key: 'buttonActivated',
-    value: function buttonActivated() {
-      _utils2.default.toggleClass(this, 'button-activated');
-    }
-  }, {
     key: 'checkScroll',
     value: function checkScroll() {
       var MIN_SCROLL = 100;
       var scrollY = document.documentElement.scrollTop || document.body.scrollTop;
 
-      if (scrollY > 50) {
+      if (scrollY > MIN_SCROLL) {
         this.isTop = false;
         this.header.classList.add('scroll-header');
-        _utils2.default.changeClass(this.logoContainer, 'ph12', 'ph4');
-        _utils2.default.changeClass(this.navMenu, 'ph12', 'ph8');
-        _utils2.default.changeClass(this.menuList, 'justify-center', 'justify-flex-end');
+        // Util.changeClass(this.logoContainer, 'ph12', 'ph4');
+        // Util.changeClass(this.navMenu, 'ph12', 'ph8');
+        // Util.changeClass(this.menuList, 'justify-center', 'justify-flex-end');
       } else {
         this.header.classList.remove('scroll-header');
-        _utils2.default.changeClass(this.logoContainer, 'ph4', 'ph12');
-        _utils2.default.changeClass(this.navMenu, 'ph8', 'ph12');
-        _utils2.default.changeClass(this.menuList, 'justify-flex-end', 'justify-center');
+        // Util.changeClass(this.logoContainer, 'ph4', 'ph12');
+        // Util.changeClass(this.navMenu, 'ph8', 'ph12');
+        // Util.changeClass(this.menuList, 'justify-flex-end', 'justify-center');
       }
     }
   }]);
@@ -98,7 +95,93 @@ var Header = function () {
 
 exports.default = Header;
 
-},{"./utils":4}],3:[function(require,module,exports){
+},{"./utils":5}],3:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _utils = require('./utils');
+
+var _utils2 = _interopRequireDefault(_utils);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Menu = function () {
+  function Menu(header) {
+    var _this = this;
+
+    _classCallCheck(this, Menu);
+
+    this.header = header;
+    this.button = document.querySelector('.menu-button');
+    this.wrapperNav = document.querySelector('.wrapper-nav-menu');
+    this.nav = document.querySelector('.nav-menu');
+    this.button.addEventListener('click', function () {
+      return _this.buttonActivated();
+    });
+    // this.wrapperNav.addEventListener('click', ev => {
+    //   console.log(ev.target);
+    //   if (ev.target == this.wrapperNav) {
+    //     Util.toggleClass(this.button, 'button-activated');
+    //     this.closeNav();
+    //   }
+    // });
+  }
+
+  _createClass(Menu, [{
+    key: 'hideWrapperNav',
+    value: function hideWrapperNav() {
+      var _this2 = this;
+
+      setTimeout(function () {
+        return _utils2.default.toggleClass(_this2.wrapperNav, 'hidden');
+      }, 150);
+    }
+  }, {
+    key: 'showNav',
+    value: function showNav() {
+      var _this3 = this;
+
+      setTimeout(function () {
+        return _this3.nav.style.left = '0';
+      }, 0);
+    }
+  }, {
+    key: 'closeNav',
+    value: function closeNav() {
+      this.nav.style.left = '-100%';
+      _utils2.default.fadeOut(this.wrapperNav);
+      this.hideWrapperNav();
+    }
+  }, {
+    key: 'buttonActivated',
+    value: function buttonActivated() {
+      _utils2.default.toggleClass(this.button, 'button-activated');
+
+      if (this.button.classList.contains('button-activated')) {
+        _utils2.default.toggleClass(this.wrapperNav, 'hidden');
+        _utils2.default.fadeIn(this.wrapperNav);
+        this.nav.style.left = '0';
+        // this.nav.style.right = '0';
+        // this.header.style.backgroundColor = "#1a237e";
+      } else {
+        this.closeNav();
+      }
+    }
+  }]);
+
+  return Menu;
+}();
+
+exports.default = Menu;
+
+},{"./utils":5}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -137,11 +220,15 @@ var Slider = function () {
     value: function initControllers() {
       var _this = this;
 
-      this.controllers.forEach(function (controller, index) {
-        controller.addEventListener('click', function () {
-          if (index != _this.currentSlide) _this.changeSlide(index);
+      var _loop = function _loop(i) {
+        _this.controllers[i].addEventListener('click', function () {
+          if (i != _this.currentSlide) _this.changeSlide(i);
         });
-      });
+      };
+
+      for (var i = 0; i < this.controllers.length; i++) {
+        _loop(i);
+      }
     }
   }, {
     key: 'init',
@@ -152,6 +239,9 @@ var Slider = function () {
         return _this2.runningSlider();
       }, this.timer);
     }
+  }, {
+    key: 'addEventListenerToController',
+    value: function addEventListenerToController() {}
   }, {
     key: 'runningSlider',
     value: function runningSlider() {
@@ -189,15 +279,24 @@ var Slider = function () {
     value: function onScroll() {
       var scrollPos = document.documentElement.scrollTop || document.body.scrollTop,
           windowHeight = window.innerHeight,
-          contentBannerPos = -50 - scrollY / 2 * .3;
 
-      this.contentBanner.forEach(function (element) {
-        return element.style.transform = 'translate(-50%, ' + contentBannerPos + '%)';
-      });
+      // contentBannerPos = -50 - ((scrollPos / 2) * .1);
+      contentBannerPos = -50 - scrollPos / 2 * .3;
 
-      if (scrollPos > windowHeight / 2) {
+      for (var i = 0; i < this.contentBanner.length; i++) {
+        this.contentBanner[i].style.transform = 'translate(-50%, ' + contentBannerPos + '%';
+      }
+
+      // this.contentBanner.forEach(element => element.style.transform = `translate(-50%, ${contentBannerPos}%)`);
+
+      if (scrollPos > windowHeight / 4) {
+        console.log(contentBannerPos);
+
         this.sliderController.classList.add('hidden');
       } else {
+        // for (let i = 0; i < this.contentBanner.length; i++) {
+        //   this.contentBanner[i].style.transform = `translate(-50%, -50%)`;
+        // }
         this.sliderController.classList.remove('hidden');
       }
     }
@@ -208,7 +307,7 @@ var Slider = function () {
 
 exports.default = Slider;
 
-},{"./utils":4}],4:[function(require,module,exports){
+},{"./utils":5}],5:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();

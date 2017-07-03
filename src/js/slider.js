@@ -19,16 +19,20 @@ class Slider {
   }
 
   initControllers() {
-    this.controllers.forEach((controller, index) => {
-      controller.addEventListener('click', () => {
-        if (index != this.currentSlide)
-          this.changeSlide(index)
+    for (let i = 0; i < this.controllers.length; i++) {
+      this.controllers[i].addEventListener('click', () => {
+        if (i != this.currentSlide)
+          this.changeSlide(i)
       });
-    });
+    }
   }
 
   init() {
     this.interval = setInterval(() => this.runningSlider(), this.timer);
+  }
+
+  addEventListenerToController() {
+
   }
 
   runningSlider() {
@@ -65,14 +69,24 @@ class Slider {
   onScroll() {
     const scrollPos = document.documentElement.scrollTop || document.body.scrollTop,
         windowHeight = window.innerHeight,
-        contentBannerPos = -50 - (scrollY / 2) * .3;
+        // contentBannerPos = -50 - ((scrollPos / 2) * .1);
+        contentBannerPos = -50 - (scrollPos / 2) * .3;
 
-    this.contentBanner.forEach(element => element.style.transform = `translate(-50%, ${contentBannerPos}%)`);
+    for (let i = 0; i < this.contentBanner.length; i++) {
+      this.contentBanner[i].style.transform = `translate(-50%, ${contentBannerPos}%`;
+    }
 
-    if (scrollPos > windowHeight / 2) {
+    // this.contentBanner.forEach(element => element.style.transform = `translate(-50%, ${contentBannerPos}%)`);
+
+    if (scrollPos > windowHeight / 4) {
+      console.log(contentBannerPos);
+
       this.sliderController.classList.add('hidden');
     }
     else {
+      // for (let i = 0; i < this.contentBanner.length; i++) {
+      //   this.contentBanner[i].style.transform = `translate(-50%, -50%)`;
+      // }
       this.sliderController.classList.remove('hidden');
     }
 

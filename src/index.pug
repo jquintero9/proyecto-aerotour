@@ -25,39 +25,40 @@ html(class="no-js", lang="es")
     p.browserupgrade Estás utilizando un navegador <b>desactualizado</b>. Por favor <a href="http://browsehappy.com/" target="_blank">actualiza</a> tu navegador para una mejor experiencia.
     <![endif]-->
     header.full-container.header
-      h1.font2.logo AEROTOUR
-      nav.ph12.hidden.nav-menu
-        ul.ph12.flex-container.justify-center.no-list-style
-          each option, index in menuOptions
-            li.flex-none
-              if index == 0
-                a(href="#").active=option
-              else
-                a(href="#")=option
-      .inline-block.menu-button
-        each className in barsClasses
-          div(class="bar " + className)
+      .container.flex-container.justify-center.l-justify-space-around.a-items-center.header-container
+        h1.font1_75.s-font2.m-font2_5.l4.l-font2.center.logo AEROTOUR
+        nav.ph8.s6.m4.l8.nav-menu
+          ul.ph12.l-flex-container.l-justify-flex-end.l-a-items-center.no-list-style.menu
+            each option, index in menuOptions
+              li
+                if index == 0
+                  a(class="l-font_75", href="#").active=option
+                else
+                  a(class="l-font_75", href="#")=option
+        .l-hidden.menu-button
+          each className in barsClasses
+            div(class="bar " + className)
     ul.ph12.no-list-style.slider
       -for(var n = 0; n < 3; n++)
         if n == 0
           li.slide.fadeIn
-            section(class="full-container banner " + bannerClasses[n])
+            section(class="banner " + bannerClasses[n])
               .ph12.center.content-banner
-                h2.font1_75.underline.banner-title=bannerTitles[n]
-                p.ph12.s11.m8.font1_25.center.underline.banner-description=bannerDescriptions[n]
+                h2.p12.s11.m10.font1_75.m-font2_5.underline.banner-title=bannerTitles[n]
+                p.ph12.s11.m8.m-font1_25.center.underline.banner-description=bannerDescriptions[n]
                 a(href="#").font_75.banner-button VER PLAN
         else
           li.slide.fadeOut
-            section(class="full-container banner " + bannerClasses[n])
+            section(class="banner " + bannerClasses[n])
               .ph12.center.content-banner
-                h2.font1_75.underline.banner-title=bannerTitles[n]
-                p.ph12.s11.m8.font1_25.center.underline.banner-description=bannerDescriptions[n]
+                h2.ph12.s11.m10.font1_75.m-font2_5.underline.banner-title=bannerTitles[n]
+                p.ph12.s11.m8.m-font1_25.center.underline.banner-description=bannerDescriptions[n]
                 a(href="#").font_75.banner-button VER PLAN
     .font0.slider-controller
       .inline-block.round.controller.active
       .inline-block.round.controller
       .inline-block.round.controller
-    section.content
+    section.container.content
       div.box.fadeIn FadeIn - FadeOut
       - for (var i = 0; i < 5; i++)
         section
